@@ -1,14 +1,12 @@
 #include "AES.hpp"
-#include <Python.h>
 
 /*
 This file implements AES-CBC encryption/decryption
 */
 extern "C" {
   constexpr size_t KEY_BIT_SIZE_256 = 256;
-  constexpr size_t KEY_BIT_SIZE_128 = 128;
 
-  Cipher::Aes<KEY_BIT_SIZE_256>* AES256(unsigned char key[]) { 
+  Cipher::Aes<KEY_BIT_SIZE_256>* AES256(unsigned char * key) { 
     return new Cipher::Aes<KEY_BIT_SIZE_256>(key);
   }
 
@@ -32,7 +30,12 @@ extern "C" {
     return l;
   }
 
-  unsigned char * AES256EncryptBlock(Cipher::Aes<KEY_BIT_SIZE_256>* cipher, int length, unsigned char data [], unsigned char iv[]){ 
+  void freeme(char *ptr)
+  {
+    free(ptr);
+  }
+
+  unsigned char * AES256EncryptBlock(Cipher::Aes<KEY_BIT_SIZE_256>* cipher, int length, unsigned char * data, unsigned char * iv){ 
     unsigned char * ciphertext = (unsigned char * ) malloc(length);
     unsigned char * block = (unsigned char * ) malloc(16);
     unsigned char * xor_ = (unsigned char * ) malloc(16);
@@ -54,7 +57,7 @@ extern "C" {
     return ciphertext;
   }
 
-  unsigned char * AES256DecryptBlock(Cipher::Aes<KEY_BIT_SIZE_256>* cipher, int length, unsigned char data[], unsigned char iv[]) { 
+  unsigned char * AES256DecryptBlock(Cipher::Aes<KEY_BIT_SIZE_256>* cipher, int length, unsigned char * data, unsigned char * iv) { 
      
     unsigned char * plaintext = (unsigned char * ) malloc(length);
     unsigned char * block = (unsigned char * ) malloc(16);
@@ -75,6 +78,4 @@ extern "C" {
     free(xor_);
     return plaintext;
   }
-
-  
 }

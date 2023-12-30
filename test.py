@@ -1,10 +1,22 @@
 from AES256HW import AES256HW
-key  = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-cipher = AES256HW(key)
-iv = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-data = [0] * 16 * 1024 * 1024
 from time import time
+key  = bytearray([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 s = time()
-cipher.encrypt(data, iv)
+cipher = AES256HW(key)
+e = time()
+print((e-s)*1000)
+iv = bytearray([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+#data = bytearray([0] * 1024)
+data = bytearray("testtesttesttesttesttesttesttest2222222222222222testtesttesttesttesttesttesttest2222222222222222".encode())
+data = bytearray("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttest".encode())
+s = time()
+ciphertext = cipher.encrypt(data, iv)
+e = time()
+print((e-s)*1000)
+s = time()
+#ciphertext = bytearray(b'\x11\xef\xf6\x0f|d6\xdb\xb0\xab%\x7f6\x94\x8c\xc7\x8b(\xcb\x9a\x83\xf9\xc2^qtt\x84\xacx\xc6\x0b\xb5\xd8\x9b\x87\xcd\xdd\xf5\xd13\x99\xa7\xea\xcc\xe4\x915p}\xce\x0b5B\xee/c\x81jIYX\xc1\xa1')
+print(ciphertext)
+plaintext = cipher.decrypt(ciphertext, iv)
 e = time()
 print((e-s))
+print(plaintext)

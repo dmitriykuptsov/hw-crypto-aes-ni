@@ -85,7 +85,7 @@ int main() {
   unsigned char iv[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   unsigned char * iv2 = (unsigned char * ) malloc(16);
   memcpy(iv2, iv, 16);
-  unsigned char * plaintext = (unsigned char * ) malloc(length);
+  unsigned char * plaintext = (unsigned char *)"testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttest";
   Cipher::Aes<KEY_BIT_SIZE_256>* cipher = AES256(key);
   auto enc_start = std::chrono::high_resolution_clock::now();
   unsigned char * ciphertext = AES256EncryptBlock(cipher, length, plaintext, iv);

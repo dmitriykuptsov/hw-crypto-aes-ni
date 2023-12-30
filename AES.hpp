@@ -6,7 +6,7 @@
 #include <iostream>
 
 namespace Cipher {
-  template <size_t key_bits = 128>
+  template <size_t key_bits = 256>
   class Aes {
     static constexpr size_t AES_BLOCK = 16;
     static constexpr size_t Nb = 4;
