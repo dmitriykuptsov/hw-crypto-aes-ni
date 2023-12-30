@@ -54,7 +54,7 @@ class AES256HW(object):
         ciphertext = ctypes.string_at(addr, len(data))
         #ciphertext = ctypes.cast(addr, ctypes.c_char_p).value
         #ciphertext = ctypes.cast(addr, ctypes.POINTER(ctypes.c_ubyte * len(data))).value
-        #lib.freeme(addr);
+        lib.freeme(addr);
         return ciphertext
         #e=time()
         #print("Done with the encryption in %f " % ((e-s)*1000))
@@ -88,5 +88,5 @@ class AES256HW(object):
         #plaintext = ctypes.cast(addr, ctypes.c_char_p).value
         plaintext = ctypes.string_at(addr, len(data))
         #plaintext = ctypes.cast(addr, ctypes.POINTER(ctypes.c_ubyte * len(data)))
-        #lib.freeme(addr);
+        lib.freeme(addr);
         return plaintext
