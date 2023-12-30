@@ -16,10 +16,8 @@ class AES256HW(object):
         self.obj = lib.AES256(raw_key)
 
     def encrypt(self, data, iv):
-        #raw_data = (ctypes.c_ubyte * len(data)).from_buffer(bytearray(data))
-        #raw_iv = (ctypes.c_ubyte * len(iv)).from_buffer(bytearray(iv))
-        raw_data = (ctypes.c_ubyte * len(data))()
-        raw_iv = (ctypes.c_ubyte * len(iv))()
+        raw_data = (ctypes.c_ubyte * len(data))(*data)
+        raw_iv = (ctypes.c_ubyte * len(iv))(*iv)
         lib.AES256EncryptBlock(self.obj, len(data), raw_data, raw_iv)
     
     def decrypt(self, data, iv):
