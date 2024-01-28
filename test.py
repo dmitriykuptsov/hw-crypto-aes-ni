@@ -1,12 +1,12 @@
-from AES256HW import AES256HW
+from AES256HW import AES256CBCCipher
 from time import time
 key  = bytearray([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 s = time()
-cipher = AES256HW(key)
+cipher = AES256CBCCipher(key)
 e = time()
 print((e-s)*1000)
 iv = bytearray([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
-#data = bytearray([0] * 1024)
+#data = bytearray([0] * 1488)
 data = bytearray("testtesttesttesttesttesttesttest2222222222222222testtesttesttesttesttesttesttest2222222222222222".encode())
 data = bytearray("testtesttesttesttesttesttesttesttesttesttesttesttesttesttesttest".encode())
 s = time()

@@ -15,78 +15,41 @@ lib.AES256EncryptBlock.restype = ctypes.POINTER(ctypes.c_ubyte)
 lib.AES256DecryptBlock.argtypes = ctypes.c_void_p, ctypes.c_int, ctypes.POINTER(ctypes.c_ubyte), ctypes.POINTER(ctypes.c_ubyte)
 lib.AES256DecryptBlock.restype = ctypes.POINTER(ctypes.c_ubyte)
 
-class AES256HW(object):
-    def __init__(self, key):
-        print(key)
-        v = array('I', key);
-        addr, count = v.buffer_info();
-        pkey = ctypes.cast(addr, ctypes.POINTER(ctypes.c_ubyte))
-        #pkey = (ctypes.c_ubyte * len(key)).from_buffer(bytearray(key))
-        self.obj = lib.AES256(pkey)
+class AES256CBCCipher():
 
-    def encrypt(self, data, iv):
-        
-        #s=time()
-        v = array('I', data);
-        #e=time()
-        #print("Done with the initialization of array %f " % ((e-s)*1000))
+	BLOCK_SIZE = 16;
+	
+	"""
+	Advanced Encryption Standard
+	"""
+	def __init__(self):
+		pass
 
-        #s=time()
-        addr, count = v.buffer_info();
-        #e=time()
-        #print("Done getting address of array %f " % ((e-s)*1000))
-        #s=time()
-        pdata = ctypes.cast(addr, ctypes.POINTER(ctypes.c_ubyte))
-        #e=time()
-        #print("Done with the casting in %f " % ((e-s)*1000))
+	def encrypt(self, key, iv, data):
+		"""
+		Encryptes the plaintext using
+		"""
+		v = array('B',key);pkey = (ctypes.c_ubyte * len(v)).from_buffer(v)
+		obj = lib.AES256(pkey)
+		v = array('B',data);pdata = (ctypes.c_ubyte * len(v)).from_buffer(v)
+		v = array('B',iv);piv = (ctypes.c_ubyte * len(v)).from_buffer(v)
+		addr = lib.AES256EncryptBlock(obj, len(data), pdata, piv)
 
-        #s=time()
-        v = array('I', iv);
-        addr, count = v.buffer_info();
-        piv = ctypes.cast(addr, ctypes.POINTER(ctypes.c_ubyte))
-        #e=time()
-        #print("Done with the casting (IV) in %f " % ((e-s)*1000))
+		ciphertext = ctypes.string_at(addr, len(data))
+		lib.freeme(addr);
+		lib.freeme(ctypes.cast(obj, ctypes.POINTER(ctypes.c_ubyte)))
+		return ciphertext
 
-        #pdata = (ctypes.c_ubyte * len(data))(*data)
-        #piv = (ctypes.c_ubyte * len(iv))(*iv)
-
-        addr = lib.AES256EncryptBlock(self.obj, len(data), pdata, piv)
-        ciphertext = ctypes.string_at(addr, len(data))
-        #ciphertext = ctypes.cast(addr, ctypes.c_char_p).value
-        #ciphertext = ctypes.cast(addr, ctypes.POINTER(ctypes.c_ubyte * len(data))).value
-        lib.freeme(addr);
-        return ciphertext
-        #e=time()
-        #print("Done with the encryption in %f " % ((e-s)*1000))
-    
-    def decrypt(self, data, iv):
-        #s=time()
-        v = array('I', data);
-        #e=time()
-        #print("Done with the initialization of array %f " % ((e-s)*1000))
-
-        #s=time()
-        addr, count = v.buffer_info();
-        #e=time()
-        #print("Done getting address of array %f " % ((e-s)*1000))
-        #s=time()
-        pdata = ctypes.cast(addr, ctypes.POINTER(ctypes.c_ubyte))
-        #e=time()
-        #print("Done with the casting in %f " % ((e-s)*1000))
-
-        #s=time()
-        v = array('I', iv);
-        addr, count = v.buffer_info();
-        piv = ctypes.cast(addr, ctypes.POINTER(ctypes.c_ubyte))
-        #e=time()
-        #print("Done with the casting (IV) in %f " % ((e-s)*1000))
-
-        #pdata = (ctypes.c_ubyte * len(data))(*data)
-        #piv = (ctypes.c_ubyte * len(iv))(*iv)
-        #s=time()
-        addr = lib.AES256DecryptBlock(self.obj, len(data), pdata, piv)
-        #plaintext = ctypes.cast(addr, ctypes.c_char_p).value
-        plaintext = ctypes.string_at(addr, len(data))
-        #plaintext = ctypes.cast(addr, ctypes.POINTER(ctypes.c_ubyte * len(data)))
-        lib.freeme(addr);
-        return plaintext
+	def decrypt(self, key, iv, data):
+		"""
+		This method decryptes the ciphertext
+		"""
+		v = array('B',key);pkey = (ctypes.c_ubyte * len(v)).from_buffer(v)
+		obj = lib.AES256(pkey)
+		v = array('B',data);pdata = (ctypes.c_ubyte * len(v)).from_buffer(v)
+		v = array('B',iv);piv = (ctypes.c_ubyte * len(v)).from_buffer(v)
+		addr = lib.AES256DecryptBlock(obj, len(data), pdata, piv)
+		plaintext = ctypes.string_at(addr, len(data))
+		lib.freeme(addr);
+		lib.freeme(ctypes.cast(obj, ctypes.POINTER(ctypes.c_ubyte)))
+		return plaintext
