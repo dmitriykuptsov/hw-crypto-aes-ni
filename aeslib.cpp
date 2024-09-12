@@ -63,7 +63,7 @@ extern "C" {
     unsigned char * block = (unsigned char * ) malloc(16);
     unsigned char * xor_ = (unsigned char * ) malloc(16);
     
-    for (int i = length; i>=16; i-=16) {
+    for (int i = length; i>=32; i-=16) {
       memcpy(block, (data + i - 16), 16);
       cipher->decrypt_block(block);
       memcpy(xor_, (data + i - 32), 16);
